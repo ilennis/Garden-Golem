@@ -4,48 +4,48 @@ using UnityEngine;
 
 public class GrowthManager : MonoBehaviour
 {
-
+    public GameManager gm;
     public GameObject pebbleModel, rockModel, boulderModel, golemModel;
     public GameObject sproutModel, budModel, flowerModel, ripenedModel;
 
     private int golemStage = 0; // 0: Pebble, 1: Rock, 2: Boulder, 3: Golem
     private int plantStage = 0; // 0: Sprout, 1: Bud, 2: Flower, 3: Ripened
 
-    public void UpdateGrowth(float plantHealth, float golemHealth)
+    public void UpdateGrowth(float plantGrowth, float golemGrowth)
     {
-        // Example: Update rock growth stage
-        if (golemHealth > 75)
+        // Example: Update plant growth stage
+        if (plantGrowth >= 100)
         {
-            pebbleModel.SetActive(false);
-            rockModel.SetActive(true);
+            AdvancePlantStage();
         }
 
-        // Example: Update plant growth stage
-        if (plantHealth > 75)
+        // Example: Update rock growth stage
+        if (golemGrowth >= 100) // change this to advance when Golem Growth reaches 100%
         {
-            sproutModel.SetActive(false);
-            budModel.SetActive(true);
+            AdvanceGolemStage();
         }
+
+        
     }
-    public void AdvanceGolemStage(float golemHealth)
+    public void AdvanceGolemStage()
     {
         golemStage++;
         if (golemStage > 3) golemStage = 3; // Max stage is Golem
 
         // Update model based on health
-        UpdateGolemModel(golemHealth);
+        UpdateGolemModel();
     }
 
-    public void AdvancePlantStage(float plantHealth)
+    public void AdvancePlantStage()
     {
         plantStage++;
         if (plantStage > 3) plantStage = 3; // Max stage is Ripened
 
         // Update model based on health
-        UpdatePlantModel(plantHealth);
+        UpdatePlantModel();
     }
 
-    private void UpdateGolemModel(float golemHealth)
+    private void UpdateGolemModel()
     {
         // Deactivate all models
         pebbleModel.SetActive(false);
@@ -54,15 +54,31 @@ public class GrowthManager : MonoBehaviour
         golemModel.SetActive(false);
 
         // Activate model based on stage and health
-        if (golemStage == 0) pebbleModel.SetActive(true);
-        else if (golemStage == 1) rockModel.SetActive(true);
-        else if (golemStage == 2) boulderModel.SetActive(true);
-        else golemModel.SetActive(true);
+        switch (golemStage)
+        {
+            case 0:
+                gm.rockState = RockGrowthState.Pebble;
+                pebbleModel.SetActive(true);
+                break;
+            case 1:
+                gm.rockState = RockGrowthState.Rock;
+                rockModel.SetActive(true);
+                break;
+            case 2:
+                gm.rockState = RockGrowthState.Boulder;
+                boulderModel.SetActive(true);
+                break;
+            case 3:
+                gm.rockState = RockGrowthState.Golem;
+                golemModel.SetActive(true);
+                break;
 
-        Debug.Log($"Golem advanced to stage {golemStage} with health {golemHealth}.");
+        }
+
+        Debug.Log($"Golem advanced to stage {golemStage}.");
     }
 
-    private void UpdatePlantModel(float plantHealth)
+    private void UpdatePlantModel()
     {
         // Deactivate all models
         sproutModel.SetActive(false);
@@ -70,13 +86,28 @@ public class GrowthManager : MonoBehaviour
         flowerModel.SetActive(false);
         ripenedModel.SetActive(false);
 
-        // Activate model based on stage and health
-        if (plantStage == 0) sproutModel.SetActive(true);
-        else if (plantStage == 1) budModel.SetActive(true);
-        else if (plantStage == 2) flowerModel.SetActive(true);
-        else ripenedModel.SetActive(true);
+        switch (plantStage)
+        {
+            case 0:
+                gm.plantState = PlantGrowthState.Sprout;
+                sproutModel.SetActive(true);
+                break;
+            case 1:
+                gm.plantState = PlantGrowthState.Bud;
+                budModel.SetActive(true);
+                break;
+            case 2:
+                gm.plantState = PlantGrowthState.Flower;
+                flowerModel.SetActive(true);
+                break;
+            case 3:
+                gm.plantState = PlantGrowthState.Ripened;
+                ripenedModel.SetActive(true);
+                break;
 
-        Debug.Log($"Plant advanced to stage {plantStage} with health {plantHealth}.");
+        }
+
+        Debug.Log($"Plant advanced to stage {plantStage}.");
     }
 
 

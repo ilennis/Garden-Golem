@@ -8,7 +8,7 @@ public enum PlantGrowthState { Sprout, Bud, Flower, Ripened }
 public class GameManager : MonoBehaviour
 {
     public GrowthManager growthManager;
-    public InputManager imputManager;
+    public InputManager inputManager;
     public DrainManager drainManager;
     public UIManager uiManager;
 
@@ -26,10 +26,14 @@ public class GameManager : MonoBehaviour
     public float growthRate = 5f; // Growth progress rate per second
     public float maxGrowthProgress = 100f; // Threshold for stage transition
 
-    public RockGrowthState rockState = RockGrowthState.Pebble;
-    public PlantGrowthState plantState = PlantGrowthState.Sprout;
+    public RockGrowthState rockState;
+    public PlantGrowthState plantState;
 
-   
+    private void Awake()
+    {
+        rockState = RockGrowthState.Pebble;
+        plantState = PlantGrowthState.Sprout;
+    }
 
 
     void Update()
@@ -46,20 +50,20 @@ public class GameManager : MonoBehaviour
         // Check for stage transitions
         if (plantGrowthProgress >= maxGrowthProgress)
         {
-            growthManager.AdvancePlantStage(plantHealth);
+            growthManager.AdvancePlantStage();
             plantGrowthProgress = 0f;
         }
 
         if (golemGrowthProgress >= maxGrowthProgress)
         {
-            growthManager.AdvanceGolemStage(golemHealth);
+            growthManager.AdvanceGolemStage();
             golemGrowthProgress = 0f;
         }
 
         // Delegate Task to Other Scripts
-        growthManager.UpdateGrowth(plantHealth, golemHealth);
+        growthManager.UpdateGrowth(plantGrowthProgress, golemGrowthProgress);
         drainManager.DrainForPlantHealth(ref plantHealth, ref golemHealth, ref moisture);
-        uiManager.UpdateUI(golemHealth, plantHealth, moisture, golemGrowthProgress, plantGrowthProgress);
+        uiManager.UpdateUI(golemHealth, plantHealth, moisture, golemGrowthProgress, plantGrowthProgress, rockState, plantState);
 
         // Clamp values to prevent them from exceeding bounds. Don't go below zero. Don't go above Max Health.
         plantHealth = Mathf.Clamp(plantHealth, 0, maxHealth);

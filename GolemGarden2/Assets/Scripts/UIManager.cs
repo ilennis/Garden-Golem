@@ -10,7 +10,8 @@ public class UIManager : MonoBehaviour
     public Text moistureText;
     public Text golemGrowthText;
     public Text plantGrowthText;
-    public Text notificationText;
+    public Text rockStateText;
+    public Text plantStateText;
 
     public Slider golemHealthSlider;
     public Slider plantHealthSlider;
@@ -18,15 +19,16 @@ public class UIManager : MonoBehaviour
     //public Slider golemGrowthSlider;
     //public Slider plantGrowthSlider;
 
-    public void UpdateUI(float golemHealth, float plantHealth, float moisture, float golemGrowth, float plantGrowth)
+    public void UpdateUI(float golemHealth, float plantHealth, float moisture, float golemGrowth, float plantGrowth, RockGrowthState rockState, PlantGrowthState plantState)
     {
         // Update text fields
-        golemHealthText.text = $"Golem Health: {golemHealth}/100";
-        plantHealthText.text = $"Plant Health: {plantHealth}/100";
-        moistureText.text = $"Moisture: {moisture}/100";
-        golemGrowthText.text = $"Golem Growth: {golemGrowth}%";
-        plantGrowthText.text = $"Plant Growth: {plantGrowth}%";
-
+        golemHealthText.text = $"Golem Health: {Mathf.RoundToInt(golemHealth)}/100";
+        plantHealthText.text = $"Plant Health: {Mathf.RoundToInt(plantHealth)}/100";
+        moistureText.text = $"Moisture: {Mathf.RoundToInt(moisture)}/100";
+        golemGrowthText.text = $"Golem Growth: {Mathf.RoundToInt(golemGrowth)}%";
+        plantGrowthText.text = $"Plant Growth: {Mathf.RoundToInt(plantGrowth)}%";
+        rockStateText.text = $"Golem Growth: {rockState}";
+        plantStateText.text = $"Plant Growth: {plantState}";
         // Update sliders
         golemHealthSlider.value = golemHealth;
         plantHealthSlider.value = plantHealth;
@@ -35,8 +37,5 @@ public class UIManager : MonoBehaviour
         //plantGrowthSlider.value = plantGrowth;
     }
 
-    public void ShowNotification(string message)
-    {
-        notificationText.text = message;
-    }
+    
 }

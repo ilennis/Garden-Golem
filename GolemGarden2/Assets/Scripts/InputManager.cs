@@ -9,6 +9,8 @@ public class InputManager : MonoBehaviour
     public int trimCount = 0;
     public int magicCount = 0;
 
+    public GameManager gm;
+
     void TrackInteraction(string interactionType)
     {
         switch (interactionType)
@@ -29,32 +31,32 @@ public class InputManager : MonoBehaviour
     }
 
     // Player Interaction.
-    public void WaterGolem(ref float moisture)
+    public void WaterGolem()
     {
-        moisture += 10f;
+        gm.moisture += 10f;
         Debug.Log("Watered the golem!");
         TrackInteraction("Water");
     }
 
-    public void PlayWithGolem(ref float golemHealth)
+    public void PlayWithGolem()
     {
-        golemHealth += 10f;
+        gm.golemHealth += 10f;
         Debug.Log("Played with the golem!");
         TrackInteraction("Play");
     }
 
-    public void TrimPlant(ref float plantHealth)
+    public void TrimPlant()
     {
         
-        plantHealth = Mathf.Max(plantHealth - 5f, 0);
+        gm.plantHealth = Mathf.Max(gm.plantHealth - 5f, 0);
         Debug.Log("Trimmed the plant! Excess health reduced.");
         TrackInteraction("Trim");
     }
 
-    public void UseMagic(ref float plantHealth, ref float golemHealth)
+    public void UseMagic()
     {
-        plantHealth = Mathf.Min(plantHealth + 20f, 100f);
-        golemHealth = Mathf.Min(golemHealth + 20f, 100f);
+        gm.plantHealth = Mathf.Min(gm.plantHealth + 20f, 100f);
+        gm.golemHealth = Mathf.Min(gm.golemHealth + 20f, 100f);
         Debug.Log("Used magic! Both plant and golem health restored.");
         TrackInteraction("Magic");
     }
